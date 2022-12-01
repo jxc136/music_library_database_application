@@ -10,14 +10,32 @@ class DatabaseConnection
   # This method connects to PostgreSQL using the 
   # PG gem. We connect to 127.0.0.1, and select
   # the database name given in argument.
-  def self.connect
-    if ENV['ENV'] == 'test'
-      database_name = 'music_library_test'
-    else
-      database_name = 'music_library'
-    end
-    @connection = PG.connect({ host: '127.0.0.1', dbname: database_name })
+  # def self.connect
+  #   if ENV['ENV'] == 'test'
+  #     database_name = 'music_library_test'
+  #   else
+  #     database_name = 'music_library'
+  #   end
+  #   @connection = PG.connect({ host: '127.0.0.1', dbname: database_name })
+  # end
+
+  # file: lib/database_connection.rb
+
+def self.connect
+  # If the environment variable (set by Render)
+  # is present, use this to open the connection.
+  if ENV['music_library_databse_o9de'] != nil
+    @connection = PG.connect(ENV['music_library_databse_o9de'])
+    return
   end
+
+  if ENV['ENV'] == 'test'
+    database_name = 'music_library_test'
+  else
+    database_name = 'music_library'
+  end
+  @connection = PG.connect({ host: '127.0.0.1', dbname: database_name })
+end
 
   # This method executes an SQL query 
   # on the database, providing some optional parameters
